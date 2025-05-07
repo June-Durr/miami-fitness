@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import emailjs from "@emailjs/browser";
 
-const ContactForm = () => {
+const ContactForm = ({ colorScheme = "gold" }) => {
+  const form = useRef();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -13,6 +15,26 @@ const ContactForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  // Define color classes based on colorScheme
+  const getColorClasses = () => {
+    const colorMap = {
+      primary: {
+        gold: "bg-gold-500 hover:bg-gold-600 focus:ring-gold-500 text-gold-500",
+        green:
+          "bg-emerald-500 hover:bg-emerald-600 focus:ring-emerald-500 text-emerald-500",
+        orange:
+          "bg-orange-500 hover:bg-orange-600 focus:ring-orange-500 text-orange-500",
+      },
+    };
+
+    return {
+      primary: colorMap.primary[colorScheme] || colorMap.primary.gold,
+    };
+  };
+
+  const colors = getColorClasses();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,12 +44,29 @@ const ContactForm = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitError(false);
+    setErrorMessage("");
 
-    // Simulate form submission
-    setTimeout(() => {
+    try {
+      // This is where you would integrate EmailJS when ready
+      // For demonstration purposes, let's simulate the API call
+
+      /* 
+      // Uncomment this code when you're ready to use EmailJS
+      await emailjs.sendForm(
+        'YOUR_SERVICE_ID', // Replace with your EmailJS service ID
+        'YOUR_TEMPLATE_ID', // Replace with your EmailJS template ID
+        form.current,
+        'YOUR_PUBLIC_KEY' // Replace with your EmailJS public key
+      );
+      */
+
+      // For now, simulate a successful API call
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
       setIsSubmitting(false);
       setSubmitSuccess(true);
 
@@ -45,16 +84,28 @@ const ContactForm = () => {
       setTimeout(() => {
         setSubmitSuccess(false);
       }, 5000);
-    }, 1500);
+    } catch (error) {
+      console.error("Error sending email:", error);
+      setIsSubmitting(false);
+      setSubmitError(true);
+      setErrorMessage(
+        "There was an error sending your message. Please try again later."
+      );
+    }
   };
 
+  // Extract primary color class
+  const buttonBgClass = colors.primary.split(" ")[0];
+  const buttonHoverClass = colors.primary.split(" ")[1];
+  const textColorClass = colors.primary.split(" ")[3];
+
   return (
-    <section id="contact" className="py-16 md:py-24 bg-white">
+    <section className="py-16 md:py-24">
       <div className="container mx-auto px-4">
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div>
-              <h2 className="text-3xl md:text-4xl font-light uppercase mb-6">
+              <h2 className="text-3xl md:text-4xl font-light uppercase mb-6 text-gray-800">
                 Get <span className="font-semibold">Started</span> Today
               </h2>
               <p className="text-gray-700 mb-8">
@@ -67,7 +118,7 @@ const ContactForm = () => {
                 <div className="flex items-start">
                   <div className="flex-shrink-0 mt-1">
                     <svg
-                      className="w-6 h-6 text-gold-500"
+                      className={`w-6 h-6 ${textColorClass}`}
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -92,7 +143,7 @@ const ContactForm = () => {
                 <div className="flex items-start">
                   <div className="flex-shrink-0 mt-1">
                     <svg
-                      className="w-6 h-6 text-gold-500"
+                      className={`w-6 h-6 ${textColorClass}`}
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -117,7 +168,7 @@ const ContactForm = () => {
                 <div className="flex items-start">
                   <div className="flex-shrink-0 mt-1">
                     <svg
-                      className="w-6 h-6 text-gold-500"
+                      className={`w-6 h-6 ${textColorClass}`}
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -148,7 +199,7 @@ const ContactForm = () => {
                 <div className="space-y-4">
                   <p className="flex items-center text-gray-700">
                     <svg
-                      className="w-5 h-5 text-gold-500 mr-3"
+                      className={`w-5 h-5 ${textColorClass} mr-3`}
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -158,7 +209,7 @@ const ContactForm = () => {
                   </p>
                   <p className="flex items-center text-gray-700">
                     <svg
-                      className="w-5 h-5 text-gold-500 mr-3"
+                      className={`w-5 h-5 ${textColorClass} mr-3`}
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -169,7 +220,7 @@ const ContactForm = () => {
                   </p>
                   <p className="flex items-center text-gray-700">
                     <svg
-                      className="w-5 h-5 text-gold-500 mr-3"
+                      className={`w-5 h-5 ${textColorClass} mr-3`}
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -185,7 +236,7 @@ const ContactForm = () => {
               </div>
             </div>
 
-            <div className="bg-gray-50 rounded-lg p-8 shadow-lg">
+            <div className="bg-gray-800 rounded-lg p-8 shadow-lg text-white">
               {submitSuccess ? (
                 <div className="text-center py-12">
                   <svg
@@ -201,25 +252,29 @@ const ContactForm = () => {
                       d="M5 13l4 4L19 7"
                     ></path>
                   </svg>
-                  <h3 className="text-2xl font-semibold text-gray-800 mb-2">
-                    Thank You!
-                  </h3>
-                  <p className="text-gray-600">
+                  <h3 className="text-2xl font-semibold mb-2">Thank You!</h3>
+                  <p className="text-gray-300">
                     Your message has been sent successfully. One of our trainers
                     will contact you shortly.
                   </p>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit}>
-                  <h3 className="text-2xl font-semibold text-gray-800 mb-6">
+                <form ref={form} onSubmit={handleSubmit}>
+                  <h3 className="text-2xl font-semibold mb-6">
                     Request Information
                   </h3>
+
+                  {submitError && (
+                    <div className="mb-6 p-4 bg-red-500 bg-opacity-20 border border-red-500 rounded-md">
+                      <p className="text-red-300">{errorMessage}</p>
+                    </div>
+                  )}
 
                   <div className="space-y-4">
                     <div>
                       <label
                         htmlFor="name"
-                        className="block text-sm font-medium text-gray-700 mb-1"
+                        className="block text-sm font-medium mb-1"
                       >
                         Full Name *
                       </label>
@@ -230,14 +285,14 @@ const ContactForm = () => {
                         value={formData.name}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gold-500 focus:border-gold-500"
+                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-full focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-none"
                       />
                     </div>
 
                     <div>
                       <label
                         htmlFor="email"
-                        className="block text-sm font-medium text-gray-700 mb-1"
+                        className="block text-sm font-medium mb-1"
                       >
                         Email Address *
                       </label>
@@ -248,14 +303,14 @@ const ContactForm = () => {
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gold-500 focus:border-gold-500"
+                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-full focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-none"
                       />
                     </div>
 
                     <div>
                       <label
                         htmlFor="phone"
-                        className="block text-sm font-medium text-gray-700 mb-1"
+                        className="block text-sm font-medium mb-1"
                       >
                         Phone Number
                       </label>
@@ -265,12 +320,12 @@ const ContactForm = () => {
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gold-500 focus:border-gold-500"
+                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-full focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-none"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium mb-1">
                         Preferred Contact Method
                       </label>
                       <div className="flex space-x-4">
@@ -281,9 +336,9 @@ const ContactForm = () => {
                             value="email"
                             checked={formData.preferredContact === "email"}
                             onChange={handleChange}
-                            className="h-4 w-4 text-gold-500 focus:ring-gold-500"
+                            className={`h-4 w-4 ${textColorClass} focus:ring-offset-gray-800`}
                           />
-                          <span className="ml-2 text-gray-700">Email</span>
+                          <span className="ml-2">Email</span>
                         </label>
                         <label className="flex items-center">
                           <input
@@ -292,9 +347,9 @@ const ContactForm = () => {
                             value="phone"
                             checked={formData.preferredContact === "phone"}
                             onChange={handleChange}
-                            className="h-4 w-4 text-gold-500 focus:ring-gold-500"
+                            className={`h-4 w-4 ${textColorClass} focus:ring-offset-gray-800`}
                           />
-                          <span className="ml-2 text-gray-700">Phone</span>
+                          <span className="ml-2">Phone</span>
                         </label>
                       </div>
                     </div>
@@ -302,7 +357,7 @@ const ContactForm = () => {
                     <div>
                       <label
                         htmlFor="trainingInterest"
-                        className="block text-sm font-medium text-gray-700 mb-1"
+                        className="block text-sm font-medium mb-1"
                       >
                         I'm Interested In
                       </label>
@@ -311,7 +366,7 @@ const ContactForm = () => {
                         name="trainingInterest"
                         value={formData.trainingInterest}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gold-500 focus:border-gold-500"
+                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-full focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-none"
                       >
                         <option value="">Select an option</option>
                         <option value="on-site">
@@ -328,7 +383,7 @@ const ContactForm = () => {
                     <div>
                       <label
                         htmlFor="message"
-                        className="block text-sm font-medium text-gray-700 mb-1"
+                        className="block text-sm font-medium mb-1"
                       >
                         Your Message
                       </label>
@@ -338,7 +393,7 @@ const ContactForm = () => {
                         rows="4"
                         value={formData.message}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gold-500 focus:border-gold-500"
+                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-none"
                         placeholder="Tell us about your fitness goals, experience level, or any questions you have."
                       ></textarea>
                     </div>
@@ -348,7 +403,7 @@ const ContactForm = () => {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-gold-500 hover:bg-gold-600 text-white py-3 px-4 rounded-md transition duration-300 flex items-center justify-center"
+                      className={`w-full ${buttonBgClass} ${buttonHoverClass} text-white py-3 px-6 rounded-full transition duration-300 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800`}
                     >
                       {isSubmitting ? (
                         <>

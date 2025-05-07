@@ -1,5 +1,32 @@
-const Footer = () => {
-  const currentYear = new Date().getFullYear();
+import { useState, useEffect } from "react";
+
+const Footer = ({ colorScheme = "gold" }) => {
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+
+  // Define colors based on the colorScheme
+  const getTextColorClass = () => {
+    return colorScheme === "gold"
+      ? "text-gold-500"
+      : colorScheme === "green"
+      ? "text-emerald-500"
+      : "text-orange-500";
+  };
+
+  const getBgColorClass = () => {
+    return colorScheme === "gold"
+      ? "bg-gold-500"
+      : colorScheme === "green"
+      ? "bg-emerald-500"
+      : "bg-orange-500";
+  };
+
+  const textColorClass = getTextColorClass();
+  const bgColorClass = getBgColorClass();
+
+  // Update year if it changes while site is open
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear());
+  }, []);
 
   return (
     <footer className="bg-gray-900 text-gray-300">
@@ -7,12 +34,14 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-1">
             <div className="flex items-center mb-4">
-              <div className="h-10 w-10 rounded-full bg-gold-500 flex items-center justify-center">
+              <div
+                className={`h-10 w-10 rounded-full ${bgColorClass} flex items-center justify-center`}
+              >
                 <span className="text-white font-bold text-xl">M</span>
               </div>
               <div className="ml-2">
                 <span className="font-bold text-white text-lg">Miami</span>
-                <span className="text-gold-500 text-lg font-light">
+                <span className={`${textColorClass} text-lg font-light`}>
                   {" "}
                   Fitness
                 </span>
@@ -92,7 +121,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#training"
-                  className="text-gray-400 hover:text-white transition duration-300"
+                  className={`text-gray-400 hover:${textColorClass} transition duration-300`}
                 >
                   On-Site Training
                 </a>
@@ -100,7 +129,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#training"
-                  className="text-gray-400 hover:text-white transition duration-300"
+                  className={`text-gray-400 hover:${textColorClass} transition duration-300`}
                 >
                   Virtual Training
                 </a>
@@ -108,7 +137,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#services"
-                  className="text-gray-400 hover:text-white transition duration-300"
+                  className={`text-gray-400 hover:${textColorClass} transition duration-300`}
                 >
                   Fitness Assessment
                 </a>
@@ -116,7 +145,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#services"
-                  className="text-gray-400 hover:text-white transition duration-300"
+                  className={`text-gray-400 hover:${textColorClass} transition duration-300`}
                 >
                   Program Design
                 </a>
@@ -124,7 +153,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#services"
-                  className="text-gray-400 hover:text-white transition duration-300"
+                  className={`text-gray-400 hover:${textColorClass} transition duration-300`}
                 >
                   Nutrition Guidance
                 </a>
@@ -140,7 +169,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#service-area"
-                  className="text-gray-400 hover:text-white transition duration-300"
+                  className={`text-gray-400 hover:${textColorClass} transition duration-300`}
                 >
                   South Beach
                 </a>
@@ -148,7 +177,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#service-area"
-                  className="text-gray-400 hover:text-white transition duration-300"
+                  className={`text-gray-400 hover:${textColorClass} transition duration-300`}
                 >
                   Brickell
                 </a>
@@ -156,7 +185,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#service-area"
-                  className="text-gray-400 hover:text-white transition duration-300"
+                  className={`text-gray-400 hover:${textColorClass} transition duration-300`}
                 >
                   Coral Gables
                 </a>
@@ -164,7 +193,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#service-area"
-                  className="text-gray-400 hover:text-white transition duration-300"
+                  className={`text-gray-400 hover:${textColorClass} transition duration-300`}
                 >
                   Coconut Grove
                 </a>
@@ -172,7 +201,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#service-area"
-                  className="text-gray-400 hover:text-white transition duration-300"
+                  className={`text-gray-400 hover:${textColorClass} transition duration-300`}
                 >
                   All Miami-Dade County
                 </a>
@@ -187,8 +216,8 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <a
-                  href="#"
-                  className="text-gray-400 hover:text-white transition duration-300"
+                  href="#hero"
+                  className={`text-gray-400 hover:${textColorClass} transition duration-300`}
                 >
                   Home
                 </a>
@@ -196,7 +225,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#about"
-                  className="text-gray-400 hover:text-white transition duration-300"
+                  className={`text-gray-400 hover:${textColorClass} transition duration-300`}
                 >
                   About Us
                 </a>
@@ -204,7 +233,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#philosophy"
-                  className="text-gray-400 hover:text-white transition duration-300"
+                  className={`text-gray-400 hover:${textColorClass} transition duration-300`}
                 >
                   Our Philosophy
                 </a>
@@ -212,7 +241,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#contact"
-                  className="text-gray-400 hover:text-white transition duration-300"
+                  className={`text-gray-400 hover:${textColorClass} transition duration-300`}
                 >
                   Contact
                 </a>
@@ -220,7 +249,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-400 hover:text-white transition duration-300"
+                  className={`text-gray-400 hover:${textColorClass} transition duration-300`}
                 >
                   Privacy Policy
                 </a>
@@ -232,7 +261,7 @@ const Footer = () => {
         <div className="border-t border-gray-800 mt-10 pt-8 text-center">
           <p className="text-gray-500">
             &copy; {currentYear} Miami Fitness. All rights reserved. Designed
-            and developed with passion.
+            for peak performance in Miami-Dade County.
           </p>
         </div>
       </div>

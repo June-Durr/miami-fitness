@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
+import "./assets/edgy-styles.css";
 
 // Create a virtual head element to add SEO metadata
 const head = document.querySelector("head");
